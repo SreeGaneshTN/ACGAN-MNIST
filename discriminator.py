@@ -3,7 +3,7 @@ import torch.nn as nn
 
 class Discriminator(nn.Module):
     def __init__(self):
-        super(self,Discriminator).__init__()
+        super(Discriminator,self).__init__()
 
         # input 1*64*64
         self.layer1 = nn.Sequential(nn.Conv2d(1, 64, 4, 2, 1, bias=False),
@@ -24,9 +24,9 @@ class Discriminator(nn.Module):
                                     nn.BatchNorm2d(512),
                                     nn.LeakyReLU(0.2, True),
                                     nn.Dropout2d(0.5))
-        self.ValidityLayer=nn.Sequential(nn.Conv2d(512,1,4,2,1,bias=False)
+        self.ValidityLayer=nn.Sequential(nn.Conv2d(512,1,4,1,0,bias=False),
                             nn.Sigmoid())
-        self.LabelLayer=nn.Sequential(nn.Conv2d(512,10,4,2,1,bias=False)
+        self.LabelLayer=nn.Sequential(nn.Conv2d(512,10,4,1,0,bias=False),
         nn.LogSoftmax())
 
     def forward(self,x):
@@ -34,8 +34,8 @@ class Discriminator(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
-        validity = self.validity_layer(x)
-        plabel = self.label_layer(x)
+        validity = self.ValidityLayer(x)
+        plabel = self.LabelLayer(x)
 
         validity = validity.view(-1)
         plabel = plabel.view(-1, 10)

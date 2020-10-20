@@ -7,8 +7,8 @@ class Generator(nn.Module):
 
         #input 100*1*1
         self.layer1=nn.Sequential(
-            nn.ConvTranspose2d(100,512,4,1,0,bias=False)
-            nn.BatchNorm2d(512)
+            nn.ConvTranspose2d(100,512,4,1,0,bias=False),
+            nn.BatchNorm2d(512),
             nn.ReLU(True)
             )
         self.layer2 = nn.Sequential(
@@ -41,9 +41,10 @@ class Generator(nn.Module):
 
         self.embedding = nn.Embedding(10, 100)
 
-    def forward(self,noise,labels):
+    def forward(self,x,labels):
         emb=self.embedding(labels)
-        x=torch.mul(noise,emb)
+        x = x.view(-1, 100, 1, 1)
+        x=torch.mul(x,emb)
         x=self.layer1(x)
         x=self.layer2(x)
         x=self.layer3(x)
