@@ -27,7 +27,7 @@ class Discriminator(nn.Module):
         self.ValidityLayer=nn.Sequential(nn.Conv2d(512,1,4,1,0,bias=False),
                             nn.Sigmoid())
         self.LabelLayer=nn.Sequential(nn.Conv2d(512,10,4,1,0,bias=False),
-        nn.LogSoftmax())
+        nn.LogSoftmax(dim=1))
 
     def forward(self,x):
         x = self.layer1(x)
